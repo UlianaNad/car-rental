@@ -31,6 +31,7 @@ const AdvertItem = ({ advert, toggleModal }) => {
   return (
     <StyledCard>
       <WrapCheckboxButton
+        $isFavorite={isFavoriteCar}
         onClick={() => {
           handleInputCheckboxChange(advert);
         }}
@@ -175,6 +176,7 @@ export const WrapCheckboxButton = styled.button`
   right: 14px;
 
   svg {
-    stroke: white;
+    stroke: ${(props) => (props.$isFavorite ? "#3470FF" : "white")};
+    fill: ${(props) => (props.$isFavorite ? "#3470FF" : "transparent")};
   }
 `;
