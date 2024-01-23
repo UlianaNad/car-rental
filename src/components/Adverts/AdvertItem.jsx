@@ -6,6 +6,7 @@ import {
   addToFavorites,
   deleteFromFavorites,
 } from "../../redux/favorites/favoritesSlice";
+import numeral from "numeral";
 
 const AdvertItem = ({ advert, toggleModal }) => {
   const addresses = advert.address.split(",").slice(1);
@@ -15,17 +16,13 @@ const AdvertItem = ({ advert, toggleModal }) => {
   const isFavoriteCar = favorites?.some(
     (favorite) => favorite.id === advert.id
   );
-  console.log(isFavoriteCar);
 
   const handleInputCheckboxChange = (advert) => {
-    console.log(advert);
     if (!isFavoriteCar) {
       dispatch(addToFavorites(advert));
     } else {
       dispatch(deleteFromFavorites(advert));
     }
-
-    //dispatch(deleteFromFavorites(advert.id));
   };
 
   return (
@@ -69,7 +66,7 @@ const AdvertItem = ({ advert, toggleModal }) => {
           </SpanInfo>
           <SpanInfo>{advert.type}</SpanInfo>
           <SpanInfo>{advert.model}</SpanInfo>
-          <SpanInfo>{advert.mileage}</SpanInfo>
+          <SpanInfo>{numeral(advert.mileage).format("0,0")}</SpanInfo>
           <SpanInfo>
             {
               advert.functionalities[

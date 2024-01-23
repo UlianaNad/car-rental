@@ -1,27 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchAdvertsThunk } from './operations';
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchAdvertsThunk } from "./advertsThunk";
 
 const initialState = {
   adverts: [],
   loading: false,
-  error: '',
+  error: "",
 };
 export const advertsSlice = createSlice({
-  name: 'adverts',
+  name: "adverts",
   initialState: initialState,
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchAdvertsThunk.fulfilled, (state, action) => {
         const newAdverts = action.payload;
-        const uniqueNewAdverts = newAdverts.filter(newAdvert => {
+        const uniqueNewAdverts = newAdverts.filter((newAdvert) => {
           return !state.adverts.some(
-            existingAdvert => existingAdvert.id === newAdvert.id
+            (existingAdvert) => existingAdvert.id === newAdvert.id
           );
         });
         state.adverts = [...state.adverts, ...uniqueNewAdverts];
         state.loading = false;
       })
-      .addCase(fetchAdvertsThunk.pending, state => {
+      .addCase(fetchAdvertsThunk.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchAdvertsThunk.rejected, (state, action) => {

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import numeral from "numeral";
 
 const Modal = ({ close, advert }) => {
-  const handleClickOutside = e => {
+  const handleClickOutside = (e) => {
     if (e.target === e.currentTarget) {
       close();
     }
@@ -10,15 +11,15 @@ const Modal = ({ close, advert }) => {
 
   useEffect(() => {
     const handleKeyDown = ({ key }) => {
-      if (key === 'Escape') {
+      if (key === "Escape") {
         close();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [close]);
 
@@ -43,19 +44,19 @@ const Modal = ({ close, advert }) => {
           <li>{advert.description}</li>
           <li>
             <h3>Accessories and functionalities:</h3>
-            {advert.accessories.map(item => {
-              return <span>{item}</span>;
+            {advert.accessories.map((item, index) => {
+              return <span key={index}>{item}</span>;
             })}
-            {advert.functionalities.map(item => {
-              return <span>{item}</span>;
+            {advert.functionalities.map((item, index) => {
+              return <span key={index}>{item}</span>;
             })}
           </li>
           <li>
             <h3>Rental Conditions:</h3>
-            {advert.rentalConditions.split('\n').map(item => {
-              return <span>{item}</span>;
+            {advert.rentalConditions.split("\n").map((item, index) => {
+              return <span key={index}>{item}</span>;
             })}
-            <span>Mileage: {advert.mileage}</span>
+            <span>Mileage: {numeral(advert.mileage).format("0,0")}</span>
             <span>Price: {advert.rentalPrice}</span>
           </li>
         </ul>

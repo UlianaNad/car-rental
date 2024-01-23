@@ -1,11 +1,13 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAdvertsThunk } from "../redux/adverts/operations";
+import { fetchAdvertsThunk } from "../redux/adverts/advertsThunk";
 import { toast } from "react-toastify";
 import { selectAdverts, selectIsLoading } from "../redux/adverts/selectors";
 import AdvertItem from "../components/Adverts/AdvertItem";
 import Modal from "../components/Modal/Modal";
+import Filter from "../components/Filter/Filter";
+import { selectAllAdverts } from "../redux/filter/selectors";
 
 const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +16,7 @@ const Catalog = () => {
   // const [advertsData, setAdvertsData] = useState([]);
   const adverts = useSelector(selectAdverts);
   const isLoading = useSelector(selectIsLoading);
+  const filterAdverts = useSelector(selectAllAdverts);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,14 +44,23 @@ const Catalog = () => {
 
   return (
     <ListWrapper>
+      <Filter pageNumber={pageNumber} />
       <StyledUl>
-        {adverts.map((advert) => (
-          <AdvertItem
-            toggleModal={toggleModal}
-            key={advert.id}
-            advert={advert}
-          />
-        ))}
+        {filterAdverts.length > 0
+          ? filterAdverts.map((advert) => (
+              <AdvertItem
+                toggleModal={toggleModal}
+                key={advert.id}
+                advert={advert}
+              />
+            ))
+          : adverts.map((advert) => (
+              <AdvertItem
+                toggleModal={toggleModal}
+                key={advert.id}
+                advert={advert}
+              />
+            ))}
       </StyledUl>
       {pageNumber < 3 ? (
         <WrapButton>
