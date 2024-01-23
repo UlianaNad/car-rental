@@ -17,7 +17,7 @@ const Layout = () => {
 export default Layout;
 
 export const Wrapper = styled.main`
-  overflow: auto;
+  padding-top: 30px;
 
   &.modal-open {
     overflow: hidden;

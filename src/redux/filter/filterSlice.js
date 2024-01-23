@@ -12,10 +12,6 @@ export const filterSlice = createSlice({
   reducer: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllAdvertsThunk.fulfilled, (state, action) => {
-        state.filter = action.payload;
-        state.loading = false;
-      })
       .addCase(fetchFilteredAdvertsThunk.fulfilled, (state, action) => {
         // const newFilter = action.payload;
         // const uniqueNewFilter = newFilter.filter((newAdvert) => {

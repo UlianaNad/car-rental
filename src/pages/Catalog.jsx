@@ -13,7 +13,6 @@ const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAdvert, setSelectedAdvert] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  // const [advertsData, setAdvertsData] = useState([]);
   const adverts = useSelector(selectAdverts);
   const isLoading = useSelector(selectIsLoading);
   const filterAdverts = useSelector(selectAllAdverts);
@@ -62,7 +61,7 @@ const Catalog = () => {
               />
             ))}
       </StyledUl>
-      {pageNumber < 3 ? (
+      {pageNumber < 3 || filterAdverts.length > 12 ? (
         <WrapButton>
           <LoadMoreButton onClick={loadMore} disabled={isLoading}>
             Load more
@@ -79,15 +78,16 @@ const Catalog = () => {
 export default Catalog;
 const StyledUl = styled.ul`
   display: grid;
-  gap: 33px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-column-gap: 20px;
+  grid-row-gap: 50px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  justify-items: center;
 `;
 
 export const ListWrapper = styled.div`
   padding-left: 128px;
   padding-right: 128px;
   padding-bottom: 150px;
-  padding-top: 50px;
 `;
 export const LoadMoreButton = styled.button`
   text-align: center;

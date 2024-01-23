@@ -49,36 +49,41 @@ const AdvertItem = ({ advert, toggleModal }) => {
 
         <WrapMainInfo>
           <span>
-            {advert.make}, {advert.year}
+            {advert.make} <BlueSpan>{advert.model}</BlueSpan>, {advert.year}
           </span>
           <span>{advert.rentalPrice}</span>
         </WrapMainInfo>
         <WrapInfo>
-          <SpanInfo>{addresses[0]}</SpanInfo>
-          <SpanInfo>{addresses[1]}</SpanInfo>
-          <SpanInfo>{advert.rentalCompany}</SpanInfo>
-          <SpanInfo>
-            {
-              advert.accessories[
-                Math.floor(Math.random() * advert.accessories.length)
-              ].split(" ")[0]
-            }
-          </SpanInfo>
-          <SpanInfo>{advert.type}</SpanInfo>
-          <SpanInfo>{advert.model}</SpanInfo>
-          <SpanInfo>{numeral(advert.mileage).format("0,0")}</SpanInfo>
-          <SpanInfo>
-            {
-              advert.functionalities[
-                Math.floor(Math.random() * advert.functionalities.length)
-              ].split(" ")[0]
-            }
-          </SpanInfo>
+          <div>
+            <SpanInfo>{addresses[0]}</SpanInfo>
+            <SpanInfo>{addresses[1]}</SpanInfo>
+            <SpanInfo>{advert.rentalCompany}</SpanInfo>
+
+            <SpanInfo>
+              {
+                advert.accessories[
+                  Math.floor(Math.random() * advert.accessories.length)
+                ].split(" ")[0]
+              }
+            </SpanInfo>
+          </div>
+          <div>
+            <SpanInfo>{advert.type}</SpanInfo>
+            <SpanInfo>{advert.model}</SpanInfo>
+            <SpanInfo>{numeral(advert.mileage).format("0,0")}</SpanInfo>
+            <SpanInfo>
+              {
+                advert.functionalities[
+                  Math.floor(Math.random() * advert.functionalities.length)
+                ].split(" ")[0]
+              }
+            </SpanInfo>
+          </div>
         </WrapInfo>
       </div>
-      <DeleteButton onClick={() => toggleModal(advert)}>
+      <LearnMoreButton onClick={() => toggleModal(advert)}>
         Learn more
-      </DeleteButton>
+      </LearnMoreButton>
     </StyledCard>
   );
 };
@@ -92,7 +97,7 @@ const StyledCard = styled.li`
   height: 426px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 28px;
+
   flex-shrink: 0;
 `;
 
@@ -132,7 +137,9 @@ export const SpanInfo = styled.span`
     border-right: none;
   }
 `;
-
+export const BlueSpan = styled.span`
+  color: #3470ff;
+`;
 export const WrapMainInfo = styled.div`
   color: #121417;
   font-size: 16px;
@@ -143,7 +150,9 @@ export const WrapMainInfo = styled.div`
   align-items: center;
 `;
 
-const DeleteButton = styled.button`
+const LearnMoreButton = styled.button`
+  position: absolute;
+  bottom: 15px;
   display: flex;
   width: 274px;
   padding: 12px 99px;

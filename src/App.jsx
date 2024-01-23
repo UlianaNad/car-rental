@@ -4,6 +4,8 @@ import Catalog from "./pages/Catalog";
 import Favorites from "./pages/Favorites";
 import HomePage from "./pages/HomePage";
 import { GlobalStyle } from "./styles/GlobalStyle";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const App = () => {
   return (
@@ -16,6 +18,7 @@ export const App = () => {
         </Route>
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
+      <ToastContainer />
       <GlobalStyle />
     </div>
   );
