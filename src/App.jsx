@@ -1,11 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
-import Catalog from "./pages/Catalog";
-import Favorites from "./pages/Favorites";
-import HomePage from "./pages/HomePage";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { lazy } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const Catalog = lazy(() => import("./pages/Catalog"));
 
 export const App = () => {
   return (

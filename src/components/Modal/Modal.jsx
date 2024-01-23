@@ -3,6 +3,7 @@ import styled from "styled-components";
 import numeral from "numeral";
 import { SpanInfo, WrapInfo } from "../Adverts/AdvertItem";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Modal = ({ close, advert }) => {
   const handleClickOutside = (e) => {
@@ -109,6 +110,27 @@ const Modal = ({ close, advert }) => {
   );
 };
 
+Modal.propTypes = {
+  close: PropTypes.func.isRequired,
+  advert: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    make: PropTypes.string.isRequired,
+    model: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
+    img: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    fuelConsumption: PropTypes.string.isRequired,
+    engineSize: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    accessories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    functionalities: PropTypes.arrayOf(PropTypes.string).isRequired,
+    rentalConditions: PropTypes.string.isRequired,
+    mileage: PropTypes.number.isRequired,
+    rentalPrice: PropTypes.number.isRequired,
+  }).isRequired,
+};
+
 export default Modal;
 
 export const StyledOverlay = styled.div`
@@ -126,7 +148,6 @@ export const StyledOverlay = styled.div`
 `;
 export const StyledModal = styled.div`
   width: 541px;
-  //height: 752px;
   background-color: white;
   border-radius: 24px;
   padding: 40px;

@@ -7,6 +7,7 @@ import {
   deleteFromFavorites,
 } from "../../redux/favorites/favoritesSlice";
 import numeral from "numeral";
+import PropTypes from "prop-types";
 
 const AdvertItem = ({ advert, toggleModal }) => {
   const addresses = advert.address.split(",").slice(1);
@@ -86,6 +87,24 @@ const AdvertItem = ({ advert, toggleModal }) => {
       </LearnMoreButton>
     </StyledCard>
   );
+};
+
+AdvertItem.propTypes = {
+  advert: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    make: PropTypes.string.isRequired,
+    model: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
+    rentalPrice: PropTypes.number.isRequired,
+    img: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    rentalCompany: PropTypes.string.isRequired,
+    accessories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    type: PropTypes.string.isRequired,
+    mileage: PropTypes.number.isRequired,
+    functionalities: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  toggleModal: PropTypes.func.isRequired,
 };
 
 export default AdvertItem;

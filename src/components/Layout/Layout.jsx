@@ -1,5 +1,5 @@
 import NavBar from "../NavBar/NavBar";
-import React from "react";
+import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,7 +8,9 @@ const Layout = () => {
     <div>
       <NavBar />
       <Wrapper>
-        <Outlet />
+        <Suspense fallback={<h1>Loading...</h1>}>
+          <Outlet />
+        </Suspense>
       </Wrapper>
     </div>
   );
