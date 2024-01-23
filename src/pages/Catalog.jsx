@@ -9,6 +9,7 @@ import Modal from "../components/Modal/Modal";
 import Filter from "../components/Filter/Filter";
 import { selectAllAdverts, selectIsFiltering } from "../redux/filter/selectors";
 import Loader from "../components/Loader/Loader";
+import { fetchAllAdvertsThunk } from "../redux/filter/filterThunk";
 
 const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,17 +18,24 @@ const Catalog = () => {
   const adverts = useSelector(selectAdverts);
   const isLoading = useSelector(selectIsLoading);
   const isFiltering = useSelector(selectIsFiltering);
-  const filterAdverts = useSelector(selectAllAdverts);
   const dispatch = useDispatch();
+  const [filteredAdverts, setFilteredAdverts] = useState([]);
+  const allAdverts = useSelector(selectAllAdverts);
 
   useEffect(() => {
     dispatch(fetchAdvertsThunk({ page: pageNumber, limit: 12 }))
       .unwrap()
       .catch((error) => toast.error(error.message));
+    dispatch(fetchAllAdvertsThunk());
   }, [dispatch, pageNumber]);
 
   const loadMore = () => {
     setPageNumber((prev) => prev + 1);
+  };
+
+  const handleFilter = (data) => {
+    const filterByModel = allAdverts.filter((item) => item.make === data.make);
+    setFilteredAdverts(filterByModel);
   };
 
   const toggleModal = (advert) => {
@@ -43,16 +51,25 @@ const Catalog = () => {
     setIsOpen((prev) => !prev);
   };
 
+  const handleAllAdverts = () => {
+    dispatch(fetchAdvertsThunk({ page: pageNumber, limit: 12 }));
+  };
+
   return (
     <>
-      {/* {isLoading ? (
-        <Loader />
-      ) : ( */}
       <ListWrapper>
-        {isFiltering ? <Loader /> : <Filter pageNumber={pageNumber} />}
+        {isFiltering ? (
+          <Loader />
+        ) : (
+          <Filter
+            pageNumber={pageNumber}
+            handleFilter={handleFilter}
+            handleAllAdverts={handleAllAdverts}
+          />
+        )}
         <StyledUl>
-          {filterAdverts.length > 0
-            ? filterAdverts.map((advert) => (
+          {filteredAdverts.length > 0
+            ? filteredAdverts.map((advert) => (
                 <AdvertItem
                   toggleModal={toggleModal}
                   key={advert.id}
@@ -67,18 +84,21 @@ const Catalog = () => {
                 />
               ))}
         </StyledUl>
-        {pageNumber < 3 || filterAdverts.length > 12 ? (
+        {pageNumber < 3 ? (
           <WrapButton>
-            <LoadMoreButton onClick={loadMore} disabled={isLoading}>
-              Load more
-            </LoadMoreButton>
+            {filteredAdverts.length > 0 ? (
+              <p>There is only {filteredAdverts.length} cars by your search.</p>
+            ) : (
+              <LoadMoreButton onClick={loadMore} disabled={isLoading}>
+                Load more
+              </LoadMoreButton>
+            )}
           </WrapButton>
         ) : (
           <WrapButton>You`ve reached the end of the list</WrapButton>
         )}
         {isOpen ? <Modal advert={selectedAdvert} close={toggleModal} /> : null}
       </ListWrapper>
-      {/* )} */}
     </>
   );
 };
@@ -106,7 +126,6 @@ export const LoadMoreButton = styled.button`
   text-decoration-line: underline;
   border: none;
   background-color: transparent;
-
   cursor: pointer;
   padding: 20px 10px;
 `;

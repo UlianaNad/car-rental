@@ -113,7 +113,7 @@ const Modal = ({ close, advert }) => {
 Modal.propTypes = {
   close: PropTypes.func.isRequired,
   advert: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     make: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,
@@ -127,7 +127,7 @@ Modal.propTypes = {
     functionalities: PropTypes.arrayOf(PropTypes.string).isRequired,
     rentalConditions: PropTypes.string.isRequired,
     mileage: PropTypes.number.isRequired,
-    rentalPrice: PropTypes.number.isRequired,
+    rentalPrice: PropTypes.string.isRequired,
   }).isRequired,
 };
 

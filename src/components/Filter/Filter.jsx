@@ -1,21 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import makes from "../data/makes.json";
-import { useDispatch } from "react-redux";
-import { fetchFilteredAdvertsThunk } from "../../redux/filter/filterThunk";
+
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-const Filter = () => {
+const Filter = ({ handleFilter, handleAllAdverts }) => {
   const { register, handleSubmit, reset, watch } = useForm();
-  const dispatch = useDispatch();
 
   const onSubmit = (data) => {
     if (data.make.value === "") {
       toast.info("Choose an option!");
     } else {
-      console.log(data.make);
-      dispatch(fetchFilteredAdvertsThunk(data));
+      handleFilter(data);
     }
     reset();
   };
@@ -23,8 +20,7 @@ const Filter = () => {
   return (
     <WrapForm>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
-        {/* <label htmlFor="carBrand">Car Brand</label> */}
-
+        <StyledLabel>Car Brand</StyledLabel>
         <StyledSelect {...register("make")} placeholder="Enter the text">
           <option value="">Select car brand</option>
           {makes.map((make, index) => {
@@ -38,6 +34,7 @@ const Filter = () => {
         <SearchButton type="submit" disabled={!watch("make")}>
           Search
         </SearchButton>
+        <AllButton onClick={handleAllAdverts}>All Cars</AllButton>
       </StyledForm>
     </WrapForm>
   );
@@ -70,14 +67,14 @@ export const StyledSelect = styled.select`
   font-size: 18px;
   font-weight: 500;
   line-height: 1.2;
-
-  :before {
-    content: "Car Brand";
-    color: #8a8a89;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 1.2;
-  }
+`;
+export const StyledLabel = styled.label`
+  color: #8a8a89;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  position: absolute;
+  margin-top: -80px;
 `;
 export const SearchButton = styled.button`
   display: flex;
@@ -93,4 +90,15 @@ export const SearchButton = styled.button`
   .disabled {
     background: #bdd1ff;
   }
+`;
+export const AllButton = styled.button`
+  text-align: center;
+  color: #3470ff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 20px 10px;
 `;

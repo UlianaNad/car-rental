@@ -91,11 +91,11 @@ const AdvertItem = ({ advert, toggleModal }) => {
 
 AdvertItem.propTypes = {
   advert: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     make: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,
-    rentalPrice: PropTypes.number.isRequired,
+    rentalPrice: PropTypes.string.isRequired,
     img: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     rentalCompany: PropTypes.string.isRequired,

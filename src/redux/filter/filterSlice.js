@@ -12,7 +12,7 @@ export const filterSlice = createSlice({
   reducer: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFilteredAdvertsThunk.fulfilled, (state, action) => {
+      .addCase(fetchAllAdvertsThunk.fulfilled, (state, action) => {
         // const newFilter = action.payload;
         // const uniqueNewFilter = newFilter.filter((newAdvert) => {
         //   return !state.filter.some(
@@ -23,13 +23,33 @@ export const filterSlice = createSlice({
         state.filter = action.payload;
         state.loading = false;
       })
-      .addCase(fetchFilteredAdvertsThunk.pending, (state) => {
+      .addCase(fetchAllAdvertsThunk.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchFilteredAdvertsThunk.rejected, (state, action) => {
+      .addCase(fetchAllAdvertsThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
+
+    // builder
+    //   .addCase(fetchFilteredAdvertsThunk.fulfilled, (state, action) => {
+    //     // const newFilter = action.payload;
+    //     // const uniqueNewFilter = newFilter.filter((newAdvert) => {
+    //     //   return !state.filter.some(
+    //     //     (existingAdvert) => existingAdvert.id === newAdvert.id
+    //     //   );
+    //     // });
+    //     // state.filter = [...state.filter, ...uniqueNewFilter];
+    //     state.filter = action.payload;
+    //     state.loading = false;
+    //   })
+    //   .addCase(fetchFilteredAdvertsThunk.pending, (state) => {
+    //     state.loading = true;
+    //   })
+    //   .addCase(fetchFilteredAdvertsThunk.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = action.payload;
+    //   });
   },
 });
 
