@@ -7,7 +7,8 @@ import { selectAdverts, selectIsLoading } from "../redux/adverts/selectors";
 import AdvertItem from "../components/Adverts/AdvertItem";
 import Modal from "../components/Modal/Modal";
 import Filter from "../components/Filter/Filter";
-import { selectAllAdverts } from "../redux/filter/selectors";
+import { selectAllAdverts, selectIsFiltering } from "../redux/filter/selectors";
+import Loader from "../components/Loader/Loader";
 
 const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,7 @@ const Catalog = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const adverts = useSelector(selectAdverts);
   const isLoading = useSelector(selectIsLoading);
+  const isFiltering = useSelector(selectIsFiltering);
   const filterAdverts = useSelector(selectAllAdverts);
   const dispatch = useDispatch();
 
@@ -42,36 +44,42 @@ const Catalog = () => {
   };
 
   return (
-    <ListWrapper>
-      <Filter pageNumber={pageNumber} />
-      <StyledUl>
-        {filterAdverts.length > 0
-          ? filterAdverts.map((advert) => (
-              <AdvertItem
-                toggleModal={toggleModal}
-                key={advert.id}
-                advert={advert}
-              />
-            ))
-          : adverts.map((advert) => (
-              <AdvertItem
-                toggleModal={toggleModal}
-                key={advert.id}
-                advert={advert}
-              />
-            ))}
-      </StyledUl>
-      {pageNumber < 3 || filterAdverts.length > 12 ? (
-        <WrapButton>
-          <LoadMoreButton onClick={loadMore} disabled={isLoading}>
-            Load more
-          </LoadMoreButton>
-        </WrapButton>
-      ) : (
-        <WrapButton>You`ve reached the end of the list</WrapButton>
-      )}
-      {isOpen ? <Modal advert={selectedAdvert} close={toggleModal} /> : null}
-    </ListWrapper>
+    <>
+      {/* {isLoading ? (
+        <Loader />
+      ) : ( */}
+      <ListWrapper>
+        {isFiltering ? <Loader /> : <Filter pageNumber={pageNumber} />}
+        <StyledUl>
+          {filterAdverts.length > 0
+            ? filterAdverts.map((advert) => (
+                <AdvertItem
+                  toggleModal={toggleModal}
+                  key={advert.id}
+                  advert={advert}
+                />
+              ))
+            : adverts.map((advert) => (
+                <AdvertItem
+                  toggleModal={toggleModal}
+                  key={advert.id}
+                  advert={advert}
+                />
+              ))}
+        </StyledUl>
+        {pageNumber < 3 || filterAdverts.length > 12 ? (
+          <WrapButton>
+            <LoadMoreButton onClick={loadMore} disabled={isLoading}>
+              Load more
+            </LoadMoreButton>
+          </WrapButton>
+        ) : (
+          <WrapButton>You`ve reached the end of the list</WrapButton>
+        )}
+        {isOpen ? <Modal advert={selectedAdvert} close={toggleModal} /> : null}
+      </ListWrapper>
+      {/* )} */}
+    </>
   );
 };
 

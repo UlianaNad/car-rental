@@ -2,13 +2,14 @@ import NavBar from "../NavBar/NavBar";
 import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import Loader from "../Loader/Loader";
 
 const Layout = () => {
   return (
     <div>
       <NavBar />
       <Wrapper>
-        <Suspense fallback={<h1>Loading...</h1>}>
+        <Suspense fallback={<Loader />}>
           <Outlet />
         </Suspense>
       </Wrapper>
