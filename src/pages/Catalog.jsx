@@ -35,9 +35,9 @@ const Catalog = () => {
   };
 
   const handleFilter = (data) => {
-    const messageNoCars = `Sorry.There is no ${data.make} under ${data.price}`;
+    const messageNoCars = `Sorry.There is no ${data.make} under ${data.price}$`;
 
-    if (data.make.length > 0 && data.price === "") {
+    if (data.make && data.price === undefined) {
       const filterByModel = allAdverts.filter(
         (item) => item.make === data.make
       );
@@ -45,7 +45,7 @@ const Catalog = () => {
       setPageNumber(1);
       setFiltered(true);
       toast.success(`We found ${filterByModel.length} ${data.make}`);
-    } else if (data.price > 0 && data.make === "") {
+    } else if (data.price > 0 && data.make === undefined) {
       const filterByPrice = allAdverts.filter(
         (item) => item.rentalPrice <= Number(data.price)
       );
@@ -54,11 +54,13 @@ const Catalog = () => {
         setFilteredAdverts(filterByPrice);
         setPageNumber(1);
         setFiltered(true);
-        toast.success(`We found ${filterByPrice.length} ${data.make} cars`);
+        toast.success(
+          `We found ${filterByPrice.length}  cars with price under ${data.price}$`
+        );
       } else {
         toast.error(messageNoCars);
       }
-    } else if (data.make.length > 0 && data.price > 0) {
+    } else if (data.make && data.price) {
       const filterByPriceAndModel = allAdverts.filter(
         (item) =>
           item.make === data.make && item.rentalPrice <= Number(data.price)
@@ -144,11 +146,6 @@ const Catalog = () => {
 export default Catalog;
 
 const StyledUl = styled.ul`
-  /* display: grid;
-  grid-column-gap: 20px;
-  grid-row-gap: 50px;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  justify-items: center; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

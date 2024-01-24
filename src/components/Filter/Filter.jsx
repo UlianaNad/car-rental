@@ -4,61 +4,108 @@ import makes from "../data/makes.json";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 
-const numbers = [];
-const generatePriceOptions = () => {
-  for (let i = 10; i < 550; i += 10) {
-    numbers.push(i);
-  }
-};
-generatePriceOptions();
+import { Controller } from "react-hook-form";
+import Select from "react-select";
 
 const Filter = ({ handleFilter, setFiltered }) => {
-  const { register, handleSubmit, reset } = useForm();
+  const deleteADverts = () => {
+    setFiltered(false);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      padding: "6px 14px 5px 14px ",
+      boxShadow: "none",
+      border: "none",
+      borderRadius: "14px",
+      backgroundColor: "#F7F7FB",
+    }),
+    placeholder: (provided, state) => ({
+      ...provided,
+      color: "#121417",
+      fontFamily: "Manrope",
+      fontSize: "18px",
+      fontStyle: "normal",
+      fontWeight: 500,
+      lineHeight: "20px",
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      color: "#171612",
+      fontFamily: "Manrope",
+      fontSize: "18px",
+      fontStyle: "normal",
+      fontWeight: 500,
+      lineHeight: "20px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: "#ffffff",
+      color: state.isFocused ? "#000000" : "rgba(18, 20, 23, 0.20)",
+    }),
+  };
+
+  const { control, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
-    if (data.make === "" && data.price === "") {
+    if (data.brand === "" && data.price === "") {
       toast.info("Select the option!");
     }
 
-    handleFilter(data);
+    handleFilter({ make: data.brand.value, price: data.price.value });
 
     reset();
   };
 
-  const deleteADverts = () => {
-    setFiltered(false);
+  const generatePrices = () => {
+    const optionsArray = [];
+    for (let i = 10; i < 550; i += 10) {
+      optionsArray.push({ value: i, label: `${i} $` });
+    }
+    return optionsArray;
   };
+
+  const brands = makes.map((brand) => ({
+    value: brand,
+    label: brand,
+  }));
+
   return (
     <WrapForm>
       <StyledForm onSubmit={handleSubmit(onSubmit)}>
-        <SelectBox>
-          <StyledLabel>Car Brand</StyledLabel>
-          <StyledSelect {...register("make")} placeholder="Enter the text">
-            <option value="">Select car brand</option>
-            {makes.map((make, index) => {
-              return (
-                <option key={index} value={make}>
-                  {make}
-                </option>
-              );
-            })}
-          </StyledSelect>
-        </SelectBox>
-
-        <SelectBox>
-          <StyledLabel $price={true}>Price/ 1 hour</StyledLabel>
-          <StyledSelect {...register("price")} placeholder="$">
-            <option value=""> To $</option>
-            {numbers.map((number, index) => {
-              return (
-                <option key={index} value={number}>
-                  {number}
-                </option>
-              );
-            })}
-          </StyledSelect>
-        </SelectBox>
-
+        <FormDiv>
+          <Label htmlFor="carBrand">Car brand</Label>
+          <Controller
+            name="brand"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={brands}
+                placeholder="Enter the text"
+                styles={customStyles}
+              />
+            )}
+          />
+        </FormDiv>
+        <FormDiv>
+          <Label htmlFor="pricePerHour">Price/ 1 hour</Label>
+          <Controller
+            name="price"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={generatePrices()}
+                placeholder="To $"
+                styles={customStyles}
+              />
+            )}
+          />
+        </FormDiv>
         <SearchButton type="submit">Search</SearchButton>
         <AllButton type="button" onClick={deleteADverts}>
           All Cars
@@ -70,54 +117,19 @@ const Filter = ({ handleFilter, setFiltered }) => {
 
 export default Filter;
 
-export const WrapForm = styled.div`
+const WrapForm = styled.div`
   margin-bottom: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-
-export const StyledForm = styled.form`
+const StyledForm = styled.form`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
 `;
 
-export const StyledSelect = styled.select`
-  border: none;
-  appearance: none;
-  padding: 14px 89px 14px 18px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 14px;
-  background: #f7f7fb;
-  color: #121417;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.2;
-
-  option {
-    color: rgba(18, 20, 23, 0.2);
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.4;
-    background-color: white;
-  }
-`;
-export const SelectBox = styled.div`
-  position: relative;
-  display: flex;
-`;
-export const StyledLabel = styled.label`
-  color: #8a8a89;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.2;
-  position: absolute;
-  margin-top: -25px;
-  margin-left: ${(props) => (props.price === true ? "250px" : "0px")};
-`;
-export const SearchButton = styled.button`
+const SearchButton = styled.button`
   cursor: pointer;
   display: flex;
   padding: 14px 44px;
@@ -135,7 +147,7 @@ export const SearchButton = styled.button`
     cursor: not-allowed;
   }
 `;
-export const AllButton = styled.button`
+const AllButton = styled.button`
   text-align: center;
   color: #3470ff;
   font-size: 16px;
@@ -144,5 +156,19 @@ export const AllButton = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  padding: 20px 10px;
+  padding: 10px 10px;
+`;
+
+const FormDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+`;
+
+const Label = styled.label`
+  color: #8a8a89;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
 `;
