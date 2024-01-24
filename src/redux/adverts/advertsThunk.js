@@ -3,7 +3,7 @@ import { advertsApi } from "../../api/api";
 
 export const fetchAdvertsThunk = createAsyncThunk(
   "fetchAdverts",
-  async ({ page = 1, limit = 12 }, thunkApi) => {
+  async ({ page, limit }, thunkApi) => {
     try {
       const { data } = await advertsApi.get(
         `adverts?page=${page}&limit=${limit}`

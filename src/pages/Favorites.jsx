@@ -4,6 +4,7 @@ import { selectFavorites } from "../redux/favorites/selectors";
 import AdvertItem from "../components/Adverts/AdvertItem";
 import styled from "styled-components";
 import Modal from "../components/Modal/Modal";
+import { WrapButton } from "./Catalog";
 
 const Favorites = () => {
   const favorites = useSelector(selectFavorites);
@@ -25,13 +26,24 @@ const Favorites = () => {
 
   return (
     <ListWrapper>
-      <StyledUl>
-        {favorites?.map((item) => {
-          return (
-            <AdvertItem key={item.id} advert={item} toggleModal={toggleModal} />
-          );
-        })}
-      </StyledUl>
+      {favorites.length !== 0 ? (
+        <StyledUl>
+          {favorites?.map((item) => {
+            return (
+              <AdvertItem
+                key={item.id}
+                advert={item}
+                toggleModal={toggleModal}
+              />
+            );
+          })}
+        </StyledUl>
+      ) : (
+        <WrapButton>
+          Your list of favorites is empty. Add the new cars to favorites!
+        </WrapButton>
+      )}
+
       {isOpen ? <Modal advert={selectedAdvert} close={toggleModal} /> : null}
     </ListWrapper>
   );
@@ -40,13 +52,14 @@ const Favorites = () => {
 export default Favorites;
 
 const StyledUl = styled.ul`
-  display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 29px;
+  li {
+    margin-bottom: 50px;
+  }
 `;
 export const ListWrapper = styled.div`
-  padding-left: 128px;
-  padding-right: 128px;
   padding-bottom: 150px;
 `;

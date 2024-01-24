@@ -25,4 +25,8 @@ export const Wrapper = styled.main`
   &.modal-open {
     overflow: hidden;
   }
+  @media screen and (min-width: 1440px) {
+    padding-left: 128px;
+    padding-right: 129px;
+  }
 `;

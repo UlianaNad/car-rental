@@ -1,26 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllAdvertsThunk, fetchFilteredAdvertsThunk } from "./filterThunk";
+import { fetchAllAdvertsThunk } from "./filterThunk";
 
 const initialState = {
   filter: [],
   loading: false,
   error: "",
 };
+
 export const filterSlice = createSlice({
   name: "filter",
   initialState: initialState,
-  reducer: {},
+  reducers: {
+    cleanFilterState: (state) => {
+      state.filter = initialState.filter;
+      state.loading = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllAdvertsThunk.fulfilled, (state, action) => {
-        // const newFilter = action.payload;
-        // const uniqueNewFilter = newFilter.filter((newAdvert) => {
-        //   return !state.filter.some(
-        //     (existingAdvert) => existingAdvert.id === newAdvert.id
-        //   );
-        // });
-        // state.filter = [...state.filter, ...uniqueNewFilter];
-        state.filter = action.payload;
+        const newFilter = action.payload;
+        const uniqueNewFilter = newFilter
+          .filter((newAdvert) => {
+            return !state.filter.some(
+              (existingAdvert) => existingAdvert.id === newAdvert.id
+            );
+          })
+          .map((item) => ({
+            ...item,
+            rentalPrice: parseFloat(item.rentalPrice.replace("$", "")),
+          }));
+        state.filter = [...state.filter, ...uniqueNewFilter];
         state.loading = false;
       })
       .addCase(fetchAllAdvertsThunk.pending, (state) => {
@@ -30,27 +40,8 @@ export const filterSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-
-    // builder
-    //   .addCase(fetchFilteredAdvertsThunk.fulfilled, (state, action) => {
-    //     // const newFilter = action.payload;
-    //     // const uniqueNewFilter = newFilter.filter((newAdvert) => {
-    //     //   return !state.filter.some(
-    //     //     (existingAdvert) => existingAdvert.id === newAdvert.id
-    //     //   );
-    //     // });
-    //     // state.filter = [...state.filter, ...uniqueNewFilter];
-    //     state.filter = action.payload;
-    //     state.loading = false;
-    //   })
-    //   .addCase(fetchFilteredAdvertsThunk.pending, (state) => {
-    //     state.loading = true;
-    //   })
-    //   .addCase(fetchFilteredAdvertsThunk.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload;
-    //   });
   },
 });
 
+export const { cleanFilterState } = filterSlice.actions;
 export const filterReducer = filterSlice.reducer;

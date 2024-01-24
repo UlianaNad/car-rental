@@ -3,39 +3,76 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdvertsThunk } from "../redux/adverts/advertsThunk";
 import { toast } from "react-toastify";
-import { selectAdverts, selectIsLoading } from "../redux/adverts/selectors";
 import AdvertItem from "../components/Adverts/AdvertItem";
 import Modal from "../components/Modal/Modal";
 import Filter from "../components/Filter/Filter";
-import { selectAllAdverts, selectIsFiltering } from "../redux/filter/selectors";
-import Loader from "../components/Loader/Loader";
+import { selectAllAdverts } from "../redux/filter/selectors";
 import { fetchAllAdvertsThunk } from "../redux/filter/filterThunk";
+import { selectAdverts } from "../redux/adverts/selectors";
 
 const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAdvert, setSelectedAdvert] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const adverts = useSelector(selectAdverts);
-  const isLoading = useSelector(selectIsLoading);
-  const isFiltering = useSelector(selectIsFiltering);
+  const [pageSize] = useState(12);
   const dispatch = useDispatch();
   const [filteredAdverts, setFilteredAdverts] = useState([]);
   const allAdverts = useSelector(selectAllAdverts);
+  const adverts = useSelector(selectAdverts);
+  const [filtered, setFiltered] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchAdvertsThunk({ page: pageNumber, limit: 12 }))
+    dispatch(fetchAdvertsThunk({ page: pageNumber, limit: pageSize }))
       .unwrap()
       .catch((error) => toast.error(error.message));
     dispatch(fetchAllAdvertsThunk());
-  }, [dispatch, pageNumber]);
+  }, [dispatch, pageNumber, pageSize]);
 
   const loadMore = () => {
     setPageNumber((prev) => prev + 1);
   };
 
   const handleFilter = (data) => {
-    const filterByModel = allAdverts.filter((item) => item.make === data.make);
-    setFilteredAdverts(filterByModel);
+    const messageNoCars = `Sorry.There is no ${data.make} under ${data.price}`;
+
+    if (data.make.length > 0 && data.price === "") {
+      const filterByModel = allAdverts.filter(
+        (item) => item.make === data.make
+      );
+      setFilteredAdverts(filterByModel);
+      setPageNumber(1);
+      setFiltered(true);
+      toast.success(`We found ${filterByModel.length} ${data.make}`);
+    } else if (data.price > 0 && data.make === "") {
+      const filterByPrice = allAdverts.filter(
+        (item) => item.rentalPrice <= Number(data.price)
+      );
+
+      if (filterByPrice.length !== 0) {
+        setFilteredAdverts(filterByPrice);
+        setPageNumber(1);
+        setFiltered(true);
+        toast.success(`We found ${filterByPrice.length} ${data.make} cars`);
+      } else {
+        toast.error(messageNoCars);
+      }
+    } else if (data.make.length > 0 && data.price > 0) {
+      const filterByPriceAndModel = allAdverts.filter(
+        (item) =>
+          item.make === data.make && item.rentalPrice <= Number(data.price)
+      );
+
+      if (filterByPriceAndModel.length !== 0) {
+        setFilteredAdverts(filterByPriceAndModel);
+        setPageNumber(1);
+        setFiltered(true);
+        toast.success(
+          `We found ${filterByPriceAndModel.length} ${data.make} with price under ${data.price}$`
+        );
+      } else {
+        toast.error(messageNoCars);
+      }
+    }
   };
 
   const toggleModal = (advert) => {
@@ -51,32 +88,25 @@ const Catalog = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleAllAdverts = () => {
-    dispatch(fetchAdvertsThunk({ page: pageNumber, limit: 12 }));
-  };
-
   return (
     <>
       <ListWrapper>
-        {isFiltering ? (
-          <Loader />
-        ) : (
-          <Filter
-            pageNumber={pageNumber}
-            handleFilter={handleFilter}
-            handleAllAdverts={handleAllAdverts}
-          />
-        )}
+        <Filter handleFilter={handleFilter} setFiltered={setFiltered} />
         <StyledUl>
-          {filteredAdverts.length > 0
-            ? filteredAdverts.map((advert) => (
+          {filtered &&
+            filteredAdverts
+              .slice(0, pageNumber * pageSize)
+              .map((advert) => (
                 <AdvertItem
                   toggleModal={toggleModal}
                   key={advert.id}
                   advert={advert}
                 />
-              ))
-            : adverts.map((advert) => (
+              ))}
+          {!filtered &&
+            adverts
+              .slice(0, pageNumber * pageSize)
+              .map((advert) => (
                 <AdvertItem
                   toggleModal={toggleModal}
                   key={advert.id}
@@ -84,18 +114,20 @@ const Catalog = () => {
                 />
               ))}
         </StyledUl>
-        {pageNumber < 3 ? (
+        {pageNumber < Math.ceil(filteredAdverts.length / pageSize) ? (
           <WrapButton>
-            {filteredAdverts.length > 0 ? (
-              <p>There is only {filteredAdverts.length} cars by your search.</p>
-            ) : (
-              <LoadMoreButton onClick={loadMore} disabled={isLoading}>
-                Load more
-              </LoadMoreButton>
-            )}
+            <p>There is only {filteredAdverts.length} cars by your search.</p>
+            <LoadMoreButton onClick={loadMore}>Load more</LoadMoreButton>
+          </WrapButton>
+        ) : null}
+        {pageNumber < 3 && !filtered ? (
+          <WrapButton>
+            <LoadMoreButton onClick={loadMore}>Load more</LoadMoreButton>
           </WrapButton>
         ) : (
-          <WrapButton>You`ve reached the end of the list</WrapButton>
+          !filtered && (
+            <WrapButton>You've reached the end of the list</WrapButton>
+          )
         )}
         {isOpen ? <Modal advert={selectedAdvert} close={toggleModal} /> : null}
       </ListWrapper>
@@ -104,19 +136,26 @@ const Catalog = () => {
 };
 
 export default Catalog;
+
 const StyledUl = styled.ul`
-  display: grid;
+  /* display: grid;
   grid-column-gap: 20px;
   grid-row-gap: 50px;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  justify-items: center;
+  justify-items: center; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 29px;
+  li {
+    margin-bottom: 50px;
+  }
 `;
 
 export const ListWrapper = styled.div`
-  padding-left: 128px;
-  padding-right: 128px;
   padding-bottom: 150px;
 `;
+
 export const LoadMoreButton = styled.button`
   text-align: center;
   color: #3470ff;
@@ -129,9 +168,10 @@ export const LoadMoreButton = styled.button`
   cursor: pointer;
   padding: 20px 10px;
 `;
+
 export const WrapButton = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   margin-top: 100px;
   text-align: center;

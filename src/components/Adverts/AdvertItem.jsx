@@ -8,6 +8,7 @@ import {
 } from "../../redux/favorites/favoritesSlice";
 import numeral from "numeral";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 const AdvertItem = ({ advert, toggleModal }) => {
   const addresses = advert.address.split(",").slice(1);
@@ -21,8 +22,14 @@ const AdvertItem = ({ advert, toggleModal }) => {
   const handleInputCheckboxChange = (advert) => {
     if (!isFavoriteCar) {
       dispatch(addToFavorites(advert));
+      toast.info(
+        `You added ${advert.make} ${advert.model} ${advert.year} to favorites!`
+      );
     } else {
       dispatch(deleteFromFavorites(advert));
+      toast.info(
+        `You removed ${advert.make} ${advert.model} ${advert.year} from favorites!`
+      );
     }
   };
 
@@ -95,7 +102,7 @@ AdvertItem.propTypes = {
     make: PropTypes.string.isRequired,
     model: PropTypes.string.isRequired,
     year: PropTypes.number.isRequired,
-    rentalPrice: PropTypes.string.isRequired,
+    rentalPrice: PropTypes.number.isRequired,
     img: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     rentalCompany: PropTypes.string.isRequired,
