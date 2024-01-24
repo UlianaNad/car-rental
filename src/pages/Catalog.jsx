@@ -8,7 +8,8 @@ import Modal from "../components/Modal/Modal";
 import Filter from "../components/Filter/Filter";
 import { selectAllAdverts } from "../redux/filter/selectors";
 import { fetchAllAdvertsThunk } from "../redux/filter/filterThunk";
-import { selectAdverts } from "../redux/adverts/selectors";
+import { selectAdverts, selectIsLoading } from "../redux/adverts/selectors";
+import Loader from "../components/Loader/Loader";
 
 const Catalog = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,7 @@ const Catalog = () => {
   const allAdverts = useSelector(selectAllAdverts);
   const adverts = useSelector(selectAdverts);
   const [filtered, setFiltered] = useState(false);
+  const isLoadingAdverts = useSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(fetchAdvertsThunk({ page: pageNumber, limit: pageSize }))
@@ -92,28 +94,32 @@ const Catalog = () => {
     <>
       <ListWrapper>
         <Filter handleFilter={handleFilter} setFiltered={setFiltered} />
-        <StyledUl>
-          {filtered &&
-            filteredAdverts
-              .slice(0, pageNumber * pageSize)
-              .map((advert) => (
-                <AdvertItem
-                  toggleModal={toggleModal}
-                  key={advert.id}
-                  advert={advert}
-                />
-              ))}
-          {!filtered &&
-            adverts
-              .slice(0, pageNumber * pageSize)
-              .map((advert) => (
-                <AdvertItem
-                  toggleModal={toggleModal}
-                  key={advert.id}
-                  advert={advert}
-                />
-              ))}
-        </StyledUl>
+        {isLoadingAdverts ? (
+          <Loader />
+        ) : (
+          <StyledUl>
+            {filtered &&
+              filteredAdverts
+                .slice(0, pageNumber * pageSize)
+                .map((advert) => (
+                  <AdvertItem
+                    toggleModal={toggleModal}
+                    key={advert.id}
+                    advert={advert}
+                  />
+                ))}
+            {!filtered &&
+              adverts
+                .slice(0, pageNumber * pageSize)
+                .map((advert) => (
+                  <AdvertItem
+                    toggleModal={toggleModal}
+                    key={advert.id}
+                    advert={advert}
+                  />
+                ))}
+          </StyledUl>
+        )}
         {pageNumber < Math.ceil(filteredAdverts.length / pageSize) ? (
           <WrapButton>
             <p>There is only {filteredAdverts.length} cars by your search.</p>
