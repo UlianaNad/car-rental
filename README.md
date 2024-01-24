@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+## Car Rental Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application is designed for a company providing car rental services in Ukraine. The application consists of three pages:
 
-## Available Scripts
+1. **Home Page:** It provides a general description of the services offered by the company. The styling and design are open to customization.
 
-In the project directory, you can run:
+2. **Catalog Page:** This page contains a catalog of cars with various configurations. Users can filter cars by brand, hourly rental price, and the number of kilometers traveled (mileage).
 
-### `npm start`
+3. **Advertisements Page:** Users can view advertisements added by other users. The application's appearance includes navigation (customizable) and a viewing area.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Technical Specifications
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+According to the layout, implement a rental car advertisement card. On the first catalog page, render 12 advertisements, and the rest on clicking the "Load more" button.
 
-### `npm test`
+- Clicking the heart-shaped button on an advertisement adds it to the favorites list, changing the button color.
+- Refreshing the page maintains the user's actions; if an advertisement is added to favorites, the button remains in the "favorite advertisement" state with the corresponding color.
+- Clicking the heart-shaped button again removes the advertisement from the favorites list, reverting the button color to the initial state.
+- Clicking the "Learn more" button opens a modal window with detailed information about the car and its rental conditions.
+- The modal window closes on clicking the "x" button, clicking on the backdrop, or pressing the "Esc" key.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Implement the "Rental car" button as a link allowing the user to contact the company by phone at +380730000000.
 
-### `npm run build`
+Implement routing using React Router. The application should have the following routes:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `/` - Home page with a general description of the company's services.
+- `/catalog` - Page containing a catalog of cars with various configurations.
+- `/favorites` - Page with advertisements added by the user to favorites.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+If a user enters a non-existent route, redirect them to the home page.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Implement dropdowns with car prices per hour (in $10 increments) for filtering advertisements based on the chosen price range.
 
-### `npm run eject`
+### Backend and Mock API
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Created a personal backend for development using the UI service [MockAPI](https://mockapi.io/). Created a resource named `adverts` with the specified fields. Populate the resource with at least 32 advertisements with different values. Implement pagination on the MockAPI side, where one pagination page contains 12 advertisements.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Used Technologies:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+React Ecosystem:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- react;
+- react-dom;
+- react-router-dom;
 
-## Learn More
+State Management:
+-"@reduxjs/toolkit;
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- react-redux;
+- redux;
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Styling:
 
-### Code Splitting
+- styled-components;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+HTTP Requests:
 
-### Analyzing the Bundle Size
+- axios;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Form Handling:
 
-### Making a Progressive Web App
+- react-hook-form;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+UI Components:
 
-### Advanced Configuration
+- react-loader-spinner;
+- react-toastify;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Utility Libraries:
 
-### Deployment
+- numeral;
+- prop-types;
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Build and Deployment:
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- gh-pages;

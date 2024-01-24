@@ -12,16 +12,3 @@ export const fetchAllAdvertsThunk = createAsyncThunk(
     }
   }
 );
-
-export const fetchFilteredAdvertsThunk = createAsyncThunk(
-  "fetchFilteredAdverts",
-  async (filter, thunkApi) => {
-    console.log(filter);
-    try {
-      const { data } = await advertsApi.get(`adverts?make=${filter.make}`);
-      return data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(error.message);
-    }
-  }
-);
